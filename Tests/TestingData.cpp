@@ -1,5 +1,31 @@
 #if 1
 #include <vector>
+#include <fstream>
+#include "MapTest.hpp"
+
+std::vector<MapExpectedResults> getTestData(
+	std::vector<std::string> const & v)
+{
+	std::vector<MapExpectedResults> params;
+
+	for (auto const & test : v) {
+		std::string root = test.substr(0, test.size() - 3);
+		std::cout << root << "json" << std::endl;
+		std::ifstream json_file("../Tests/" + root + "json");
+		if (!json_file) {
+			params.emplace_back(
+				test,
+				"could not open JSON file"
+			);
+		}
+		else {
+			nlohmann::json json;
+			json_file >> json;
+			params.emplace_back(test, json);
+		}
+	}
+	return params;
+}
 
 std::vector<std::string> mapsForTest = {
 	"data/maps/(2)Showdown.scx",

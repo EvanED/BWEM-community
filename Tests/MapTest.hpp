@@ -2,6 +2,8 @@
 
 #include "BWAPI/GameImpl.h"
 #include "BW/BWData.h"
+#include "nlohmann/json.hpp"
+#include <optional>
 
 extern std::vector<std::string> mapsForTest;
 extern std::vector<std::pair<int, int>> mapTileDimensions;
@@ -49,3 +51,22 @@ template<typename Functor> void runOnMap(std::string const &mapName, Functor f) 
 
   f(&(*h));
 }
+
+struct MapExpectedResults
+{
+	std::string mapName;
+	nlohmann::json json;
+	std::optional<std::string> maybeError;
+
+	MapExpectedResults(std::string n, nlohmann::json j)
+		: mapName(std::move(n)), json(j)
+	{}
+
+	MapExpectedResults(std::string n, char const * e)
+		: mapName(std::move(n))
+		, maybeError(std::move(e))
+	{}
+};
+
+std::vector<MapExpectedResults> getTestData(
+	std::vector<std::string> const & v);

@@ -6,26 +6,9 @@
 
 #include "MapTest.hpp"
 
-#include "nlohmann/json.hpp"
 #include "gtest/gtest.h"
 
-struct MapResourcesTestParameters
-{
-	std::string mapName;
-	nlohmann::json json;
-	std::optional<std::string> maybeError;
-
-	MapResourcesTestParameters(std::string n, nlohmann::json j)
-		: mapName(std::move(n)), json(j)
-	{}
-
-	MapResourcesTestParameters(std::string n, char const * e)
-		: mapName(std::move(n))
-		, maybeError(std::move(e))
-	{}
-};
-
-class MapResourcesInfo : public ::testing::TestWithParam<MapResourcesTestParameters> {
+class MapResourcesInfo : public ::testing::TestWithParam<MapExpectedResults> {
 };
 
 TEST_P(MapResourcesInfo, MapGeyserCount) {
@@ -67,30 +50,6 @@ TEST_P(MapResourcesInfo, MapMineralCount) {
 	EXPECT_EQ(expectedMineralsCount, bwemCalculatedMineralsCount);
 }
 
-std::vector<MapResourcesTestParameters> getTestData(
-	std::vector<std::string> const & v)
-{
-	std::vector<MapResourcesTestParameters> params;
-
-	for (auto const & test : v) {
-		std::string root = test.substr(0, test.size() - 3);
-		std::cout << root << "json" << std::endl;
-		std::ifstream json_file("../Tests/" + root + "json");
-		if (!json_file) {
-			params.emplace_back(
-				test,
-				"could not open JSON file"
-			);
-		}
-		else {
-			nlohmann::json json;
-			json_file >> json;
-			params.emplace_back(test, json);
-		}
-	}
-	return params;
-}
-
 INSTANTIATE_TEST_CASE_P(
 	SynteticCheck,
 	MapResourcesInfo,
@@ -102,7 +61,7 @@ INSTANTIATE_TEST_CASE_P(
 
 		// Open BW does not support small-sized minerals and gases
 		// See when https://github.com/OpenBW/openbw/issues/19 resolved to unlock
-		// MapResourcesTestParameters("data/maps/resources.scm", 3 /* + 9 small gases */, 13 /* + 4 small minerals */),
+		// MapExpectedResults"data/maps/resources.scm", 3 /* + 9 small gases */, 13 /* + 4 small minerals */),
 		"data/maps/resources_usual.scm",
 
 		// In this map all minerals and geysers have just 1% of their total amount 
