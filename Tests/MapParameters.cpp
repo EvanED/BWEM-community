@@ -1,4 +1,3 @@
-#if 1
 #include <tuple>
 #include "bwem.h"
 #include "mapImpl.h"
@@ -89,4 +88,3 @@ INSTANTIATE_TEST_CASE_P(
 	SSCAITMaps,
 	MapDimensionsTest,
 	::testing::ValuesIn(getTestData(sscaitMaps)));
-#endif

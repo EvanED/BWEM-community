@@ -1,4 +1,3 @@
-#if 1
 #include <vector>
 #include <fstream>
 #include "MapTest.hpp"
@@ -76,4 +75,3 @@ std::vector<std::string> sscaitMaps = {
 	"data/maps/sscai/(4)Python.scx",
 	"data/maps/sscai/(4)Roadrunner.scx",
 };
-#endif

@@ -1,8 +1,6 @@
-#if 0
 #include "bwem.h"
 #include "mapImpl.h"
 #include <optional>
-#include <string_view>
 
 #include "MapTest.hpp"
 
@@ -93,4 +91,3 @@ INSTANTIATE_TEST_CASE_P(
 		"data/maps/sscai/(4)Python.scx",
 		"data/maps/sscai/(4)Roadrunner.scx"
 	})));
-#endif

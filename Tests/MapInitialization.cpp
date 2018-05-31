@@ -1,4 +1,3 @@
-#if 0
 #include "bwem.h"
 #include "mapImpl.h"
 #include "DummyBWAPIMap.h"
@@ -30,4 +29,3 @@ TEST(MapInitialization, MapInitializedUsingOpenBW) {
 
 	EXPECT_EQ(true, map.Initialized());
 }
-#endif

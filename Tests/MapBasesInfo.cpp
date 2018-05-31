@@ -1,4 +1,3 @@
-#if 0
 #include "bwem.h"
 #include "mapImpl.h"
 
@@ -66,5 +65,3 @@ INSTANTIATE_TEST_CASE_P(
 	::testing::ValuesIn(getTestData({
 		"data/maps/(2)Showdown.scx"
 		})));
-
-#endif
