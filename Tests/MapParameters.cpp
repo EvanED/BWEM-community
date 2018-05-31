@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include <tuple>
 #include "bwem.h"
 #include "mapImpl.h"
@@ -7,25 +7,25 @@
 
 #include "gtest/gtest.h"
 
-typedef std::tuple<
-	std::string,
-	std::pair<int, int>,
-	std::pair<int, int>,
-	std::pair<int, int>,
-	std::pair<int, int>> MapDimensionsTestParameters;
-
-class MapDimensionsTest : public ::testing::TestWithParam<MapDimensionsTestParameters> {
+class MapDimensionsTest : public ::testing::TestWithParam<MapExpectedResults> {
 };
+
+std::pair<int, int>
+jsonCoordinatesToPair(nlohmann::json const & j)
+{
+	return { j[1], j[2] };
+}
 
 TEST_P(MapDimensionsTest, VerifyDimensionsLoadedCorrectly) {
 	BWEM::detail::MapImpl map;
 
 	auto param = GetParam();
-	auto mapName = std::get<0>(param);
-	auto tileDimensions = std::get<1>(param);
-	auto walkDimensions = std::get<2>(param);
-	auto expectedCenter = std::get<3>(param);
-	auto expectedMaxAltitude = std::get<4>(param);
+	auto mapName = param.mapName;
+	auto tileDimensions = jsonCoordinatesToPair(param.json["tile_dimensions"]);
+	auto walkDimensions = jsonCoordinatesToPair(param.json["walk_dimensions"]);
+	auto expectedCenter = jsonCoordinatesToPair(param.json["center_position"]);
+	int expectedMaxAltitude = param.json["altitude_limit"];
+
 	runOnMap(mapName, [&](auto game) {
 		map.Initialize(game);
 	});
@@ -43,7 +43,7 @@ TEST_P(MapDimensionsTest, VerifyDimensionsLoadedCorrectly) {
 	EXPECT_EQ(expectedCenter.second, center.y);
 
 	auto maxAltitude = map.MaxAltitude();
-	EXPECT_EQ(expectedMaxAltitude.second, maxAltitude);
+	EXPECT_EQ(expectedMaxAltitude, maxAltitude);
 }
 
 TEST(AltitudeTest, VerifyAltitudeCalculatedCorrectly) {
@@ -80,52 +80,13 @@ TEST(AltitudeTest, VerifyAltitudeCalculatedCorrectly) {
 	EXPECT_EQ(2024, mapCenter.Altitude());
 }
 
-std::vector<MapDimensionsTestParameters> getTestData(
-	std::vector<std::string> maps,
-	std::vector<std::pair<int, int>> tileDimensions,
-	std::vector<std::pair<int, int>> walkDimensions,
-	std::vector<std::pair<int, int>> centerPositions,
-	std::vector<std::pair<int, int>> altitudeLimits)
-{
-	auto tileIterator = tileDimensions.begin();
-	auto walkIterator = walkDimensions.begin();
-	auto centerIterator = centerPositions.begin();
-	auto altitudeIterator = altitudeLimits.begin();
-	std::vector<MapDimensionsTestParameters> parameters;
-	for (auto map : maps)
-	{
-		parameters.push_back(std::make_tuple(
-			map,
-			*tileIterator,
-			*walkIterator,
-			*centerIterator,
-			*altitudeIterator));
-		tileIterator++;
-		walkIterator++;
-		centerIterator++;
-		altitudeIterator++;
-	}
-
-	return parameters;
-}
-
 INSTANTIATE_TEST_CASE_P(
 	SynteticCheck,
-	MapDimensionsTest, 
-	::testing::ValuesIn(getTestData(
-		mapsForTest,
-		mapTileDimensions,
-		mapWalkDimensions,
-		mapCenterPositions,
-		mapAltitudeLimits)));
+	MapDimensionsTest,
+	::testing::ValuesIn(getTestData(mapsForTest)));
 
 INSTANTIATE_TEST_CASE_P(
 	SSCAITMaps,
 	MapDimensionsTest,
-	::testing::ValuesIn(getTestData(
-		sscaitMaps,
-		sscaitMapTileDimensions,
-		sscaitMapWalkDimensions,
-		sscaitMapCenterPositions,
-		sscaitMapAltitudeLimits)));
+	::testing::ValuesIn(getTestData(sscaitMaps)));
 #endif
