@@ -44,7 +44,6 @@ TEST_P(MapBasesInfo, MapStartLocationCount2PlayersMap) {
   });
 
     EXPECT_EQ(expectedNumberStarts, map.StartingLocations().size());
-	EXPECT_EQ(2, map.StartingLocations().size());
 }
 
 TEST_P(MapBasesInfo, MapBaseCount) {
@@ -59,7 +58,6 @@ TEST_P(MapBasesInfo, MapBaseCount) {
   });
 	
 	EXPECT_EQ(expectedBases, map.BaseCount());
-	EXPECT_EQ(8, map.BaseCount());
 }
 
 INSTANTIATE_TEST_CASE_P(
