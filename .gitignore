@@ -36,3 +36,8 @@ Debug*
 */Release/*
 Release*
 packages/*
+
+# MPQ files (user-provided)
+Tests/BrooDat.mpq
+Tests/patch_rt.mpq
+Tests/StarDat.mpq
