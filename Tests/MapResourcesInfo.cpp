@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "bwem.h"
 #include "mapImpl.h"
 #include <optional>
@@ -12,18 +12,15 @@
 struct MapResourcesTestParameters
 {
 	std::string mapName;
-	int expectedMinerals;
-	int expectedGeysers;
+	nlohmann::json json;
 	std::optional<std::string> maybeError;
 
-	MapResourcesTestParameters(std::string n, int g, int m)
-		: mapName(std::move(n)), expectedMinerals(m), expectedGeysers(g)
+	MapResourcesTestParameters(std::string n, nlohmann::json j)
+		: mapName(std::move(n)), json(j)
 	{}
 
-	MapResourcesTestParameters(std::string n, std::string e)
+	MapResourcesTestParameters(std::string n, char const * e)
 		: mapName(std::move(n))
-		, expectedMinerals(-1)
-		, expectedGeysers(-1)
 		, maybeError(std::move(e))
 	{}
 };
@@ -36,7 +33,7 @@ TEST_P(MapResourcesInfo, MapGeyserCount) {
 	
 	auto param = GetParam();
 	auto mapName = param.mapName;
-	auto expectedGeysersCount = param.expectedGeysers;
+	int expectedGeysersCount = param.json["resources"]["number_geysers"];
 	auto countedGeysers = 0;
 
   runOnMap(mapName, [&](auto game) {
@@ -56,7 +53,7 @@ TEST_P(MapResourcesInfo, MapMineralCount) {
 
 	auto param = GetParam();
 	auto mapName = param.mapName;
-	auto expectedMineralsCount = param.expectedMinerals;
+	int expectedMineralsCount = param.json["resources"]["number_minerals"];
 	auto countedMinerals = 0;
   runOnMap(mapName, [&](auto game) {
     map.Initialize(game);
@@ -88,12 +85,7 @@ std::vector<MapResourcesTestParameters> getTestData(
 		else {
 			nlohmann::json json;
 			json_file >> json;
-
-			params.emplace_back(
-				test,
-				json["resources"]["number_geysers"],
-				json["resources"]["number_minerals"]
-			);
+			params.emplace_back(test, json);
 		}
 	}
 	return params;
