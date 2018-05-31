@@ -78,10 +78,6 @@ std::vector<std::string> sscaitMaps = {
 };
 
 std::vector<std::pair<int, int>> sscaitMapTileDimensions = {
-	{ 128, 112 },
-	{ 96, 128 },
-	{ 128, 96 },
-
 	{ 128, 128 },
 	{ 128, 128 },
 
@@ -98,10 +94,6 @@ std::vector<std::pair<int, int>> sscaitMapTileDimensions = {
 };
 
 std::vector<std::pair<int, int>> sscaitMapWalkDimensions = {
-	{ 512, 448 },
-	{ 384, 512 },
-	{ 512, 384 },
-
 	{ 512, 512 },
 	{ 512, 512 },
 
@@ -118,10 +110,6 @@ std::vector<std::pair<int, int>> sscaitMapWalkDimensions = {
 };
 
 std::vector<std::pair<int, int>> sscaitMapCenterPositions = {
-	{ 2048, 1792 },
-	{ 1536, 2048 },
-	{ 2048, 1536 },
-
 	{ 2048, 2048 },
 	{ 2048, 2048 },
 
@@ -138,10 +126,6 @@ std::vector<std::pair<int, int>> sscaitMapCenterPositions = {
 };
 
 std::vector<std::pair<int, int>> sscaitMapAltitudeLimits = {
-	{ 0, 488 },
-	{ 0, 483 },
-	{ 0, 454 },
-
 	{ 0, 429 },
 	{ 0, 478 },
 
